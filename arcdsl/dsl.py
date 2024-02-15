@@ -314,14 +314,14 @@ def positive(
 
 def toivec(
     i: Integer
-) -> IntegerTuple:
+) -> Coordinate:
     """ vector pointing vertically """
     return (i, 0)
 
 
 def tojvec(
     j: Integer
-) -> IntegerTuple:
+) -> Coordinate:
     """ vector pointing horizontally """
     return (0, j)
 
@@ -407,7 +407,7 @@ def interval(
 def astuple(
     a: Integer,
     b: Integer
-) -> IntegerTuple:
+) -> Coordinate:
     """ constructs a tuple """
     return (a, b)
 
@@ -600,7 +600,7 @@ def width(
 
 def shape(
     piece: Piece
-) -> IntegerTuple:
+) -> Coordinate:
     """ height and width of grid or patch """
     return (height(piece), width(piece))
 
@@ -640,7 +640,7 @@ def sizefilter(
 
 def asindices(
     grid: Grid
-) -> Indices:
+) -> Coordinates:
     """ indices of all grid cells """
     return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
 
@@ -648,43 +648,43 @@ def asindices(
 def ofcolor(
     grid: Grid,
     value: Integer
-) -> Indices:
+) -> Coordinates:
     """ indices of all grid cells with value """
     return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
 
 
 def ulcorner(
     patch: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ index of upper left corner """
     return tuple(map(min, zip(*toindices(patch))))
 
 
 def urcorner(
     patch: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ index of upper right corner """
     return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
 
 
 def llcorner(
     patch: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ index of lower left corner """
     return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
 
 
 def lrcorner(
     patch: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ index of lower right corner """
     return tuple(map(max, zip(*toindices(patch))))
 
 
 def crop(
     grid: Grid,
-    start: IntegerTuple,
-    dims: IntegerTuple
+    start: Coordinate,
+    dims: Coordinate
 ) -> Grid:
     """ subgrid specified by start and dimension """
     return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
@@ -692,7 +692,7 @@ def crop(
 
 def toindices(
     patch: Patch
-) -> Indices:
+) -> Coordinates:
     """ indices of object cells """
     if len(patch) == 0:
         return frozenset()
@@ -711,7 +711,7 @@ def recolor(
 
 def shift(
     patch: Patch,
-    directions: IntegerTuple
+    directions: Coordinate
 ) -> Patch:
     """ shift patch """
     if len(patch) == 0:
@@ -732,22 +732,22 @@ def normalize(
 
 
 def dneighbors(
-    loc: IntegerTuple
-) -> Indices:
+    loc: Coordinate
+) -> Coordinates:
     """ directly adjacent indices """
     return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 
 
 def ineighbors(
-    loc: IntegerTuple
-) -> Indices:
+    loc: Coordinate
+) -> Coordinates:
     """ diagonally adjacent indices """
     return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
 
 
 def neighbors(
-    loc: IntegerTuple
-) -> Indices:
+    loc: Coordinate
+) -> Coordinates:
     """ adjacent indices """
     return dneighbors(loc) | ineighbors(loc)
 
@@ -901,7 +901,7 @@ def bordering(
 
 def centerofmass(
     patch: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ center of mass """
     return tuple(map(lambda x: sum(x) // len(patch), zip(*toindices(patch))))
 
@@ -1224,7 +1224,7 @@ def switch(
 
 def center(
     patch: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ center of the patch """
     return (uppermost(patch) + height(patch) // 2, leftmost(patch) + width(patch) // 2)
 
@@ -1232,7 +1232,7 @@ def center(
 def position(
     a: Patch,
     b: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ relative position between two patches """
     ia, ja = center(toindices(a))
     ib, jb = center(toindices(b))
@@ -1248,7 +1248,7 @@ def position(
 
 def index(
     grid: Grid,
-    loc: IntegerTuple
+    loc: Coordinate
 ) -> Integer:
     """ color at location """
     i, j = loc
@@ -1260,7 +1260,7 @@ def index(
 
 def canvas(
     value: Integer,
-    dimensions: IntegerTuple
+    dimensions: Coordinate
 ) -> Grid:
     """ grid construction """
     return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
@@ -1268,15 +1268,15 @@ def canvas(
 
 def corners(
     patch: Patch
-) -> Indices:
+) -> Coordinates:
     """ indices of corners """
     return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
 
 
 def connect(
-    a: IntegerTuple,
-    b: IntegerTuple
-) -> Indices:
+    a: Coordinate,
+    b: Coordinate
+) -> Coordinates:
     """ line between two points """
     ai, aj = a
     bi, bj = b
@@ -1313,7 +1313,7 @@ def trim(
 def move(
     grid: Grid,
     obj: Object,
-    offset: IntegerTuple
+    offset: Coordinate
 ) -> Grid:
     """ move object on grid """
     return paint(cover(grid, obj), shift(obj, offset))
@@ -1348,22 +1348,22 @@ def righthalf(
 
 
 def vfrontier(
-    location: IntegerTuple
-) -> Indices:
+    location: Coordinate
+) -> Coordinates:
     """ vertical frontier """
     return frozenset((i, location[1]) for i in range(30))
 
 
 def hfrontier(
-    location: IntegerTuple
-) -> Indices:
+    location: Coordinate
+) -> Coordinates:
     """ horizontal frontier """
     return frozenset((location[0], j) for j in range(30))
 
 
 def backdrop(
     patch: Patch
-) -> Indices:
+) -> Coordinates:
     """ indices in bounding box of patch """
     if len(patch) == 0:
         return frozenset({})
@@ -1375,7 +1375,7 @@ def backdrop(
 
 def delta(
     patch: Patch
-) -> Indices:
+) -> Coordinates:
     """ indices in bounding box but not part of patch """
     if len(patch) == 0:
         return frozenset({})
@@ -1385,7 +1385,7 @@ def delta(
 def gravitate(
     source: Patch,
     destination: Patch
-) -> IntegerTuple:
+) -> Coordinate:
     """ direction to move source until adjacent to destination """
     si, sj = center(source)
     di, dj = center(destination)
@@ -1406,7 +1406,7 @@ def gravitate(
 
 def inbox(
     patch: Patch
-) -> Indices:
+) -> Coordinates:
     """ inbox for patch """
     ai, aj = uppermost(patch) + 1, leftmost(patch) + 1
     bi, bj = lowermost(patch) - 1, rightmost(patch) - 1
@@ -1419,7 +1419,7 @@ def inbox(
 
 def outbox(
     patch: Patch
-) -> Indices:
+) -> Coordinates:
     """ outbox for patch """
     ai, aj = uppermost(patch) - 1, leftmost(patch) - 1
     bi, bj = lowermost(patch) + 1, rightmost(patch) + 1
@@ -1432,7 +1432,7 @@ def outbox(
 
 def box(
     patch: Patch
-) -> Indices:
+) -> Coordinates:
     """ outline of patch """
     if len(patch) == 0:
         return patch
@@ -1446,9 +1446,9 @@ def box(
 
 
 def shoot(
-    start: IntegerTuple,
-    direction: IntegerTuple
-) -> Indices:
+    start: Coordinate,
+    direction: Coordinate
+) -> Coordinates:
     """ line from starting point and direction """
     return connect(start, (start[0] + 42 * direction[0], start[1] + 42 * direction[1]))
 
@@ -1456,7 +1456,7 @@ def shoot(
 def occurrences(
     grid: Grid,
     obj: Object
-) -> Indices:
+) -> Coordinates:
     """ locations of occurrences of object in grid """
     occs = set()
     normed = normalize(obj)

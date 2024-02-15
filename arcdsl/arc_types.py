@@ -11,16 +11,16 @@ from typing import (
 
 Boolean = bool
 Integer = int
-IntegerTuple = Tuple[Integer, Integer]
-Numerical = Union[Integer, IntegerTuple]
+Coordinate = Tuple[Integer, Integer]
+Numerical = Union[Integer, Coordinate]
 IntegerSet = FrozenSet[Integer]
 Grid = Tuple[Tuple[Integer]]
-Cell = Tuple[Integer, IntegerTuple]
+Cell = Tuple[Integer, Coordinate]
 Object = FrozenSet[Cell]
 Objects = FrozenSet[Object]
-Indices = FrozenSet[IntegerTuple]
-IndicesSet = FrozenSet[Indices]
-Patch = Union[Object, Indices]
+Coordinates = FrozenSet[Coordinate]
+IndicesSet = FrozenSet[Coordinates]
+Patch = Union[Object, Coordinates]
 Element = Union[Object, Grid]
 Piece = Union[Grid, Patch]
 TupleTuple = Tuple[Tuple]
