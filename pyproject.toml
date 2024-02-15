@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "arcdsl"
+version = "0.0.1"
+description = "Domain Specific Language for the Abstraction and Reasoning Corpus"
+authors = ["Michael Hodel <mihodel@ethz.ch>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+tqdm = "^4.65"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.3.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
