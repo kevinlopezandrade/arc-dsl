@@ -1,12 +1,15 @@
 from typing import (
-    List,
-    Union,
-    Tuple,
     Any,
-    Container,
     Callable,
+    Container,
     FrozenSet,
-    Iterable
+    Iterable,
+    List,
+    Protocol,
+    Sized,
+    Tuple,
+    TypeVar,
+    Union,
 )
 
 Boolean = bool
@@ -25,3 +28,12 @@ Element = Union[Object, Grid]
 Piece = Union[Grid, Patch]
 TupleTuple = Tuple[Tuple]
 ContainerContainer = Container[Container]
+
+_T = TypeVar("_T")
+
+
+# Custom Protocol
+class IterableContainer(Iterable[_T], Container[_T], Sized, Protocol[_T]):
+    # We define init here to make it compatible with the current containers.
+    def __init__(self, __iterable: Iterable[_T]) -> None:
+        ...
